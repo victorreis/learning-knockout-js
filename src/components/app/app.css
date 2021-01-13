@@ -1,0 +1,39 @@
+.app-logo {
+  height: 40vmin;
+  pointer-events: none;
+  width: 90%;
+  max-width: 1280px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .app-logo {
+    animation: shake infinite 5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+}
+
+.app-link {
+  color: #590c12;
+}
+
+@keyframes shake {
+  82%,
+  98% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  85%,
+  96% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  86%,
+  90%,
+  94% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  88%,
+  92% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
