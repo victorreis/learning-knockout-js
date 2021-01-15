@@ -1,5 +1,6 @@
 import * as ko from 'knockout';
 import { Observable } from 'knockout';
+import '../seat-reservations';
 
 interface AppParams {
     message: string;

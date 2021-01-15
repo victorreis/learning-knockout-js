@@ -1,0 +1,59 @@
+<h3>All the seat reservations</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Passenger name</th>
+            <th>Seat</th>
+            <th>At Window?</th>
+            <th>Meal</th>
+            <th>Surcharge</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: seatsReservations">
+        <tr>
+            <td data-bind="text: fullname"></td>
+            <!--<td><select data-bind="options: $root.seats(), value: seat, optionsText: 'name'"></select></td>-->
+            <td data-bind="text: seat.name"></td>
+            <td data-bind="text: isAtWindow"></td>
+            <td data-bind="text: meal.name"></td>
+            <td data-bind="text: formattedPrice"></td>
+            <td>
+                <button
+                    data-bind="click: $parent.removePassengerSeatReservation"
+                >
+                    X
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr />
+
+<select
+    data-bind="options: clientsNotAllocated, value: selectedClient, optionsText: 'name'"
+></select>
+<select
+    data-bind="options: freeSeats, value: seletedSeat, optionsText: 'name'"
+></select>
+<select
+    data-bind="options: meals, value: selectedMeal, optionsText: 'name'"
+></select>
+
+<br />
+<br />
+<button
+    data-bind="click: addPassenger, enable: clientsNotAllocated().length > 0"
+>
+    ADD PASSENGER
+</button>
+
+<div data-bind="if: addPassengerError">
+    <br />
+    ERROR: <span data-bind="text: addPassengerError" />
+</div>
+
+<br />
+<br />
