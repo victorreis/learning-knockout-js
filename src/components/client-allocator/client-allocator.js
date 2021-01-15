@@ -6,7 +6,7 @@ const ClientAllocator = ({
     seats,
     freeSeats,
     passengers,
-    addPassenger,
+    onAddPassenger,
 }) => {
     const selectedClient = ko.observable(0);
     const seletedSeat = ko.observable(0);
@@ -21,6 +21,13 @@ const ClientAllocator = ({
         )
     );
 
+    const addPassenger = () =>
+        onAddPassenger(
+            selectedClient().id,
+            seletedSeat().id,
+            selectedMeal().id
+        );
+
     return {
         meals,
         clients,
@@ -31,12 +38,8 @@ const ClientAllocator = ({
         freeSeats,
         seletedSeat,
         selectedMeal,
-        addPassenger: () =>
-            addPassenger(
-                selectedClient().id,
-                seletedSeat().id,
-                selectedMeal().id
-            ),
+
+        addPassenger,
     };
 };
 
