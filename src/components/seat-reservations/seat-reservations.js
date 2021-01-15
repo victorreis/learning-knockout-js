@@ -60,14 +60,51 @@ const addPassengerError = ko.observable('');
 
 const formatPrice = (price) => () => (price ? `$${price.toFixed(2)}` : 'None');
 
-const createSeatReservation = (client, seat, meal) => ({
-    idClient: client.id,
-    fullname: `${client.name} ${client.lastname}`,
-    seat,
-    isAtWindow: seat && seat.isAtWindow ? 'x' : '',
-    meal,
-    formattedPrice: ko.computed(formatPrice(meal.price)),
-});
+const updatePassengerSeat = (clientId, newSeatId) => {
+    const modifiedPassengers = passengers().map((passenger) => {
+        if (passenger.idClient === clientId) {
+            return {
+                ...passenger,
+                idSeat: newSeatId,
+            };
+        }
+        return passenger;
+    });
+    passengers(modifiedPassengers);
+};
+const updatePassengerMeal = (clientId, newMealId) => {
+    const modifiedPassengers = passengers().map((passenger) => {
+        if (passenger.idClient === clientId) {
+            return {
+                ...passenger,
+                idMeal: newMealId,
+            };
+        }
+        return passenger;
+    });
+    passengers(modifiedPassengers);
+};
+
+const createSeatReservation = (client, seat, meal) => {
+    const seatObservable = ko.observable(seat);
+    const updatePassengerSeatSubscribe = (newSeat) =>
+        updatePassengerSeat(client.id, newSeat.id);
+    seatObservable.subscribe(updatePassengerSeatSubscribe);
+
+    const mealObservable = ko.observable(meal);
+    const updatePassengerMealSubscribe = (newMeal) =>
+        updatePassengerMeal(client.id, newMeal.id);
+    mealObservable.subscribe(updatePassengerMealSubscribe);
+
+    return {
+        idClient: client.id,
+        fullname: `${client.name} ${client.lastname}`,
+        seat: seatObservable,
+        isAtWindow: seat && seat.isAtWindow ? 'x' : '',
+        meal: mealObservable,
+        formattedPrice: ko.computed(formatPrice(meal.price)),
+    };
+};
 const createSeatReservationFromPassenger = (passenger) => {
     const clientData = clients().find(
         (client) => client.id === passenger.idClient

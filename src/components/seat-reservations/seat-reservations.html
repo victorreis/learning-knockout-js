@@ -14,10 +14,17 @@
     <tbody data-bind="foreach: seatsReservations">
         <tr>
             <td data-bind="text: fullname"></td>
-            <!--<td><select data-bind="options: $root.seats(), value: seat, optionsText: 'name'"></select></td>-->
-            <td data-bind="text: seat.name"></td>
+            <td>
+                <select
+                    data-bind="options: [seat(), ...$parent.freeSeats()], value: seat, optionsText: 'name'"
+                ></select>
+            </td>
             <td data-bind="text: isAtWindow"></td>
-            <td data-bind="text: meal.name"></td>
+            <td>
+                <select
+                    data-bind="options: [meal(), ...$parent.meals()], value: meal, optionsText: 'name'"
+                ></select>
+            </td>
             <td data-bind="text: formattedPrice"></td>
             <td>
                 <button
