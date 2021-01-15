@@ -35,109 +35,109 @@ const passengersMock = [
     { idClient: 333, idSeat: 11, idMeal: 303 },
 ];
 
-const meals = ko.observableArray(mealsMock);
-const clients = ko.observableArray(clientsMock);
-const seats = ko.observableArray(seatsMock);
-const passengers = ko.observableArray(passengersMock);
+const SeatReservations = () => {
+    const meals = ko.observableArray(mealsMock);
+    const clients = ko.observableArray(clientsMock);
+    const seats = ko.observableArray(seatsMock);
+    const passengers = ko.observableArray(passengersMock);
+    const freeSeats = ko.computed(() =>
+        seats().filter(
+            (seat) =>
+                !passengers().find((passenger) => passenger.idSeat === seat.id)
+        )
+    );
 
-const formatPrice = (price) => () => (price ? `$${price.toFixed(2)}` : 'None');
+    const formatPrice = (price) => () =>
+        price ? `$${price.toFixed(2)}` : 'None';
 
-const updatePassengerSeat = (clientId, newSeatId) => {
-    const modifiedPassengers = passengers().map((passenger) => {
-        if (passenger.idClient === clientId) {
-            return {
-                ...passenger,
-                idSeat: newSeatId,
-            };
+    const updatePassengerSeat = (clientId, newSeatId) => {
+        const modifiedPassengers = passengers().map((passenger) => {
+            if (passenger.idClient === clientId) {
+                return {
+                    ...passenger,
+                    idSeat: newSeatId,
+                };
+            }
+            return passenger;
+        });
+        passengers(modifiedPassengers);
+    };
+    const updatePassengerMeal = (clientId, newMealId) => {
+        const modifiedPassengers = passengers().map((passenger) => {
+            if (passenger.idClient === clientId) {
+                return {
+                    ...passenger,
+                    idMeal: newMealId,
+                };
+            }
+            return passenger;
+        });
+        passengers(modifiedPassengers);
+    };
+
+    const createSeatReservation = (client, seat, meal) => {
+        const seatObservable = ko.observable(seat);
+        const updatePassengerSeatSubscribe = (newSeat) =>
+            updatePassengerSeat(client.id, newSeat.id);
+        seatObservable.subscribe(updatePassengerSeatSubscribe);
+
+        const mealObservable = ko.observable(meal);
+        const updatePassengerMealSubscribe = (newMeal) =>
+            updatePassengerMeal(client.id, newMeal.id);
+        mealObservable.subscribe(updatePassengerMealSubscribe);
+
+        return {
+            idClient: client.id,
+            fullname: `${client.name} ${client.lastname}`,
+            seat: seatObservable,
+            isAtWindow: seat && seat.isAtWindow ? 'x' : '',
+            meal: mealObservable,
+            formattedPrice: ko.computed(formatPrice(meal.price)),
+        };
+    };
+    const createSeatReservationFromPassenger = (passenger) => {
+        const clientData = clients().find(
+            (client) => client.id === passenger.idClient
+        );
+        const seatData = seats().find((seat) => seat.id === passenger.idSeat);
+        const mealData = meals().find((meal) => meal.id === passenger.idMeal);
+
+        return createSeatReservation(clientData, seatData, mealData);
+    };
+
+    const createSeatsReservations = () =>
+        passengers().map((passenger) =>
+            createSeatReservationFromPassenger(passenger)
+        );
+    const seatsReservations = ko.computed(createSeatsReservations);
+
+    const addPassenger = (selectedClientId, seletedSeatId, selectedMealId) => {
+        if (!selectedClientId) {
+            return;
         }
-        return passenger;
-    });
-    passengers(modifiedPassengers);
-};
-const updatePassengerMeal = (clientId, newMealId) => {
-    const modifiedPassengers = passengers().map((passenger) => {
-        if (passenger.idClient === clientId) {
-            return {
-                ...passenger,
-                idMeal: newMealId,
-            };
-        }
-        return passenger;
-    });
-    passengers(modifiedPassengers);
-};
 
-const createSeatReservation = (client, seat, meal) => {
-    const seatObservable = ko.observable(seat);
-    const updatePassengerSeatSubscribe = (newSeat) =>
-        updatePassengerSeat(client.id, newSeat.id);
-    seatObservable.subscribe(updatePassengerSeatSubscribe);
+        const passenger = {
+            idClient: selectedClientId,
+            idSeat: seletedSeatId,
+            idMeal: selectedMealId,
+        };
+        passengers.push(passenger);
+    };
 
-    const mealObservable = ko.observable(meal);
-    const updatePassengerMealSubscribe = (newMeal) =>
-        updatePassengerMeal(client.id, newMeal.id);
-    mealObservable.subscribe(updatePassengerMealSubscribe);
+    const removePassengerSeatReservation = (data) =>
+        passengers.remove((passenger) => passenger.idClient === data.idClient);
 
     return {
-        idClient: client.id,
-        fullname: `${client.name} ${client.lastname}`,
-        seat: seatObservable,
-        isAtWindow: seat && seat.isAtWindow ? 'x' : '',
-        meal: mealObservable,
-        formattedPrice: ko.computed(formatPrice(meal.price)),
+        meals,
+        clients,
+        seats,
+        freeSeats,
+        passengers,
+        seatsReservations,
+
+        addPassenger,
+        removePassengerSeatReservation,
     };
 };
-const createSeatReservationFromPassenger = (passenger) => {
-    const clientData = clients().find(
-        (client) => client.id === passenger.idClient
-    );
-    const seatData = seats().find((seat) => seat.id === passenger.idSeat);
-    const mealData = meals().find((meal) => meal.id === passenger.idMeal);
-
-    return createSeatReservation(clientData, seatData, mealData);
-};
-
-const createSeatsReservations = () =>
-    passengers().map((passenger) =>
-        createSeatReservationFromPassenger(passenger)
-    );
-const seatsReservations = ko.computed(createSeatsReservations);
-
-const removePassengerSeatReservation = (data) => {
-    console.log(data);
-    passengers.remove((passenger) => passenger.idClient === data.idClient);
-};
-
-const freeSeats = ko.computed(() =>
-    seats().filter(
-        (seat) =>
-            !passengers().find((passenger) => passenger.idSeat === seat.id)
-    )
-);
-
-const addPassenger = (selectedClientId, seletedSeatId, selectedMealId) => {
-    if (!selectedClientId) {
-        return;
-    }
-
-    const passenger = {
-        idClient: selectedClientId,
-        idSeat: seletedSeatId,
-        idMeal: selectedMealId,
-    };
-    passengers.push(passenger);
-};
-
-const SeatReservations = () => ({
-    meals,
-    clients,
-    seats,
-    freeSeats,
-    passengers,
-    seatsReservations,
-
-    addPassenger,
-    removePassengerSeatReservation,
-});
 
 export default SeatReservations;
