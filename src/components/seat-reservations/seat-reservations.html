@@ -1,33 +1,36 @@
-<h3>All the seat reservations</h3>
+<h2>Seat Reservations</h2>
 
-<table>
+<table class="table table-hover text-center">
     <thead>
         <tr>
-            <th>Passenger name</th>
-            <th>Seat</th>
-            <th>At Window?</th>
-            <th>Meal</th>
-            <th>Surcharge</th>
-            <th>Action</th>
+            <th scope="col" class="text-start">Passenger name</th>
+            <th scope="col">Seat</th>
+            <th scope="col">At Window?</th>
+            <th scope="col">Meal</th>
+            <th scope="col">Surcharge</th>
+            <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: seatsReservations">
         <tr>
-            <td data-bind="text: fullname"></td>
+            <td class="text-start" data-bind="text: fullname"></td>
             <td>
                 <select
+                    class="form-select"
                     data-bind="options: [seat(), ...$parent.freeSeats()], value: seat, optionsText: 'name'"
                 ></select>
             </td>
             <td data-bind="text: isAtWindow"></td>
             <td>
                 <select
+                    class="form-select"
                     data-bind="options: [meal(), ...$parent.meals()], value: meal, optionsText: 'name'"
                 ></select>
             </td>
             <td data-bind="text: formattedPrice"></td>
             <td>
                 <button
+                    class="btn btn-danger btn-sm"
                     data-bind="click: $parent.removePassengerSeatReservation"
                 >
                     X
@@ -39,23 +42,48 @@
 
 <hr />
 
-<select
-    data-bind="options: clientsNotAllocated, value: selectedClient, optionsText: 'name'"
-></select>
-<select
-    data-bind="options: freeSeats, value: seletedSeat, optionsText: 'name'"
-></select>
-<select
-    data-bind="options: meals, value: selectedMeal, optionsText: 'name'"
-></select>
-
-<br />
-<br />
-<button
-    data-bind="click: addPassenger, enable: clientsNotAllocated().length > 0"
->
-    ADD PASSENGER
-</button>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <label for="selectedClient">
+                <strong>Choose a client:</strong>
+            </label>
+            <select
+                name="selectedClient"
+                class="form-select"
+                data-bind="options: clientsNotAllocated, value: selectedClient, optionsText: 'name'"
+            ></select>
+        </div>
+        <div class="col-sm">
+            <label for="selectedSeat bold">
+                <strong>Choose a seat:</strong>
+            </label>
+            <select
+                name="selectedSeat"
+                class="form-select"
+                data-bind="options: freeSeats, value: seletedSeat, optionsText: 'name'"
+            ></select>
+        </div>
+        <div class="col-sm">
+            <label for="selectedMeal">
+                <strong>Choose a meal:</strong>
+            </label>
+            <select
+                name="selectedMeal"
+                class="form-select"
+                data-bind="options: meals, value: selectedMeal, optionsText: 'name'"
+            ></select>
+        </div>
+        <div class="col-sm position-relative">
+            <button
+                class="btn btn-primary col-12 position-absolute bottom-0 end-0"
+                data-bind="click: addPassenger, enable: clientsNotAllocated().length > 0"
+            >
+                ADD PASSENGER
+            </button>
+        </div>
+    </div>
+</div>
 
 <div data-bind="if: addPassengerError">
     <br />

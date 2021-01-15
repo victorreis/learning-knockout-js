@@ -11,27 +11,3 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
 }
-
-.header {
-    background-color: #e42e16;
-    padding: 24px 16px;
-}
-
-.header a {
-    font-size: 1.5em;
-    text-decoration: none;
-    color: #efefef;
-    margin: 0.25em;
-}
-
-.main {
-    text-align: center;
-    background-color: #fcd4d4;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: #212529;
-}
