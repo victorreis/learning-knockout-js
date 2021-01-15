@@ -33,7 +33,6 @@ const passengersMock = [
     { idClient: 222, idSeat: 2, idMeal: 101 },
     { idClient: 333, idSeat: 11, idMeal: 303 },
 ];
-const ALL_CLIENTS_PASSENGERS_ERROR = 'All the clients already are passengers.';
 
 const meals = ko.observableArray(mealsMock);
 const clients = ko.observableArray(clientsMock);
@@ -56,7 +55,6 @@ const freeSeats = ko.computed(() =>
 const selectedClient = ko.observable(0);
 const seletedSeat = ko.observable(0);
 const selectedMeal = ko.observable(0);
-const addPassengerError = ko.observable('');
 
 const formatPrice = (price) => () => (price ? `$${price.toFixed(2)}` : 'None');
 
@@ -128,7 +126,6 @@ const removePassengerSeatReservation = (data) => {
 
 const addPassenger = () => {
     if (!selectedClient()) {
-        addPassengerError(ALL_CLIENTS_PASSENGERS_ERROR);
         return;
     }
 
@@ -154,7 +151,6 @@ const SeatReservations = () => ({
     seletedSeat,
     selectedMeal,
     addPassenger,
-    addPassengerError,
 });
 
 export default SeatReservations;
