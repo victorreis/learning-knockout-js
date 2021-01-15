@@ -1,16 +1,16 @@
-import * as ko from "knockout";
-import { Observable } from "knockout";
+import * as ko from 'knockout';
+import { Observable } from 'knockout';
 
 interface AppParams {
-  message: string;
+    message: string;
 }
 
 export default class App {
-  message?: Observable<string>;
+    message?: Observable<string>;
 
-  constructor({ message }: AppParams) {
-    this.message = ko.observable(message);
-  }
+    constructor({ message }: AppParams) {
+        this.message = ko.observable(message);
+    }
 
-  dispose() {}
+    dispose() {}
 }
