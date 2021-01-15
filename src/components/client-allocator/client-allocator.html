@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <label for="selectedClient">
+                <strong>Select a client:</strong>
+            </label>
+            <select
+                name="selectedClient"
+                class="form-select"
+                data-bind="options: clientsNotAllocated,
+                    value: selectedClient,
+                    optionsText: (client) => `${client.name} ${client.lastname}`"
+            ></select>
+        </div>
+        <div class="col-sm">
+            <label for="selectedSeat bold">
+                <strong>Select a seat:</strong>
+            </label>
+            <select
+                name="selectedSeat"
+                class="form-select"
+                data-bind="options: freeSeats,
+                    value: seletedSeat,
+                    optionsText: 'name'"
+            ></select>
+        </div>
+        <div class="col-sm">
+            <label for="selectedMeal">
+                <strong>Select a meal:</strong>
+            </label>
+            <select
+                name="selectedMeal"
+                class="form-select"
+                data-bind="options: meals,
+                    value: selectedMeal,
+                    optionsText: 'name'"
+            ></select>
+        </div>
+        <div class="col-sm position-relative">
+            <button
+                class="btn btn-primary col-12 position-absolute bottom-0 end-0"
+                data-bind="click: addPassenger,
+                    enable: clientsNotAllocated().length > 0"
+            >
+                ADD PASSENGER
+            </button>
+        </div>
+    </div>
+</div>

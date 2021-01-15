@@ -1,4 +1,5 @@
 import * as ko from 'knockout';
+import '../client-allocator';
 
 // Non-editable catalog data - would come from the server
 const mealsMock = [
@@ -38,23 +39,6 @@ const meals = ko.observableArray(mealsMock);
 const clients = ko.observableArray(clientsMock);
 const seats = ko.observableArray(seatsMock);
 const passengers = ko.observableArray(passengersMock);
-
-const clientsNotAllocated = ko.computed(() =>
-    clients().filter(
-        (client) =>
-            !passengers().find((passenger) => passenger.idClient === client.id)
-    )
-);
-const freeSeats = ko.computed(() =>
-    seats().filter(
-        (seat) =>
-            !passengers().find((passenger) => passenger.idSeat === seat.id)
-    )
-);
-
-const selectedClient = ko.observable(0);
-const seletedSeat = ko.observable(0);
-const selectedMeal = ko.observable(0);
 
 const formatPrice = (price) => () => (price ? `$${price.toFixed(2)}` : 'None');
 
@@ -124,15 +108,22 @@ const removePassengerSeatReservation = (data) => {
     passengers.remove((passenger) => passenger.idClient === data.idClient);
 };
 
-const addPassenger = () => {
-    if (!selectedClient()) {
+const freeSeats = ko.computed(() =>
+    seats().filter(
+        (seat) =>
+            !passengers().find((passenger) => passenger.idSeat === seat.id)
+    )
+);
+
+const addPassenger = (selectedClientId, seletedSeatId, selectedMealId) => {
+    if (!selectedClientId) {
         return;
     }
 
     const passenger = {
-        idClient: selectedClient().id,
-        idSeat: seletedSeat().id,
-        idMeal: selectedMeal().id,
+        idClient: selectedClientId,
+        idSeat: seletedSeatId,
+        idMeal: selectedMealId,
     };
     passengers.push(passenger);
 };
@@ -141,16 +132,12 @@ const SeatReservations = () => ({
     meals,
     clients,
     seats,
+    freeSeats,
     passengers,
     seatsReservations,
-    removePassengerSeatReservation,
 
-    clientsNotAllocated,
-    selectedClient,
-    freeSeats,
-    seletedSeat,
-    selectedMeal,
     addPassenger,
+    removePassengerSeatReservation,
 });
 
 export default SeatReservations;
